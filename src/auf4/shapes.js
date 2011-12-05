@@ -114,12 +114,12 @@ TriangleFan = function(gl) {
                                         0.7,-0.7,0,  1.0,0,0,      0.7,0.7,0]);
     var vcolor    = new Float32Array( [ 1,1,1,  1,0,0,  0,1,0,      
                                         0,0,1,  1,0,0,  0,1,0,  
-                                        0,0,1,  1,0,0,  0,1,0,    ]);
+                                        0,0,1,  1,0,0,  0,1,0 ]);
     this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
     this.shape.addVertexAttribute(gl, "vertexColor",    gl.FLOAT, 3, vcolor);
     
 }        
-    
+     
 
 /* 
 
@@ -132,23 +132,78 @@ TriangleFan = function(gl) {
    
 */ 
 
-Cube = function(gl) {
+Cube = function(gl, size) {
     // instantiate the shape as a member variable
     this.shape = new VertexBasedShape(gl, gl.TRIANGLES, 36);
 
+    var s = size || 1.0; 
+
     var vposition = new Float32Array( [ 
-        -1,-1, 1,  1, 1, 1, -1, 1, 1, // a
-        -1,-1, 1,  1,-1, 1,  1, 1, 1, // b 
-         1,-1, 1,  1,-1,-1,  1, 1, 1, // c 
-         1,-1,-1,  1, 1,-1,  1, 1, 1, // d 
-         1, 1, 1,  1, 1,-1, -1, 1,-1, // e 
-        -1, 1,-1, -1, 1, 1,  1, 1, 1, // f 
-        -1, 1, 1, -1,-1, 1, -1,-1,-1, // g 
-        -1, 1, 1, -1,-1,-1, -1, 1,-1, // h 
-        -1, 1,-1, -1,-1,-1,  1,-1,-1, // i
-         1,-1,-1,  1, 1,-1, -1, 1,-1, // j
-        -1,-1,-1, -1,-1, 1,  1,-1, 1, // k
-         1,-1, 1,  1,-1,-1, -1,-1,-1 // l 
+        -s,-s, s,  s, s, s, -s, s, s, // a
+        -s,-s, s,  s,-s, s,  s, s, s, // b 
+         s,-s, s,  s,-s,-s,  s, s, s, // c 
+         s,-s,-s,  s, s,-s,  s, s, s, // d 
+         s, s, s,  s, s,-s, -s, s,-s, // e 
+        -s, s,-s, -s, s, s,  s, s, s, // f 
+        -s, s, s, -s,-s, s, -s,-s,-s, // g 
+        -s, s, s, -s,-s,-s, -s, s,-s, // h 
+        -s, s,-s, -s,-s,-s,  s,-s,-s, // i
+         s,-s,-s,  s, s,-s, -s, s,-s, // j
+        -s,-s,-s, -s,-s, s,  s,-s, s, // k
+         s,-s, s,  s,-s,-s, -s,-s,-s // l 
+    ]);
+
+	var a = 1, b = 0, c = 0.5;                          
+
+    var vcolor    = new Float32Array( [ 
+        a,a,a, a,a,a, a,a,a, 
+        a,a,b, a,a,b, a,a,b, 
+        a,b,a, a,b,a, a,b,a, 
+        a,b,b, a,b,b, a,b,b, 
+        b,a,a, b,a,a, b,a,a, 
+        b,a,b, b,a,b, b,a,b, 
+        b,b,a, b,b,a, b,b,a, 
+        a,a,c, a,a,c, a,a,c, 
+        a,c,a, a,c,a, a,c,a, 
+        a,c,c, a,c,c, a,c,c, 
+        c,a,a, c,a,a, c,a,a, 
+        c,a,c, c,a,c, c,a,c 
+    ]);
+    this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
+    this.shape.addVertexAttribute(gl, "vertexColor",    gl.FLOAT, 3, vcolor);
+}        
+    
+
+/* 
+
+   Class:  Sphere
+   A little sphere around the zero point.  
+    
+   Parameters to the constructor:
+   - program is a Program object that knows which vertex attributes 
+     are expected by its shaders
+   
+*/ 
+
+Sphere = function(gl, size) {
+    // instantiate the shape as a member variable
+    this.shape = new VertexBasedShape(gl, gl.TRIANGLES, 36);
+
+    var s = size || 1.0; 
+
+    var vposition = new Float32Array( [ 
+        -s,-s, s,  s, s, s, -s, s, s, // a
+        -s,-s, s,  s,-s, s,  s, s, s, // b 
+         s,-s, s,  s,-s,-s,  s, s, s, // c 
+         s,-s,-s,  s, s,-s,  s, s, s, // d 
+         s, s, s,  s, s,-s, -s, s,-s, // e 
+        -s, s,-s, -s, s, s,  s, s, s, // f 
+        -s, s, s, -s,-s, s, -s,-s,-s, // g 
+        -s, s, s, -s,-s,-s, -s, s,-s, // h 
+        -s, s,-s, -s,-s,-s,  s,-s,-s, // i
+         s,-s,-s,  s, s,-s, -s, s,-s, // j
+        -s,-s,-s, -s,-s, s,  s,-s, s, // k
+         s,-s, s,  s,-s,-s, -s,-s,-s // l 
     ]);
 
 	var a = 1, b = 0, c = 0.5;                          
