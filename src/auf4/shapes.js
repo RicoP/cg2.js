@@ -193,7 +193,6 @@ Cube = function(gl, size) {
 Sphere = function(gl, size) {
 	var vertices = getSphereVertices(); 
 	var indices = getSphereIndices();
-    var colors = getSphereVerticesColors();  
 
 	var vposition = makeFlat(vertices, indices); 
 
@@ -201,30 +200,9 @@ Sphere = function(gl, size) {
     this.shape = new VertexBasedShape(gl, gl.TRIANGLES, vposition.length / 3);
 
     var s = size || 1.0; 
-
-	var a = 1, b = 0, c = 0.5;                          
-
-    var vcolor = makeFlat(colors, indices); 
     
     this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
-    this.shape.addVertexAttribute(gl, "vertexColor",    gl.FLOAT, 3, vcolor);
 }
-
-function getSphereVerticesColors() {
-	var X = 1; 
-    var Y = 0.2
-	var Z = 0.5;
-    var A = 0.8; 
-    var B = 0.7; 
-     
-	var v = [
-        [A, 1.0, Z], [X, 1.0, Z], [A, 1.0, B], [X, 1.0, B],
-        [1.0, Z, X], [1.0, Z, A], [1.0, B, X], [1.0, B, A],
-        [Z, X, 1.0], [B, X, 1.0], [Z, A, 1.0], [B, A, 1.0]
-    ]
-
-    return v; 
-}        
 
 function getSphereVertices() {
     var X = 0.525731112119133606;
