@@ -314,12 +314,12 @@ function makeFlat(vertices, indeces) {
 }
 
 function pushTriangle(list, v1, v2, v3) {
-	pushIndece(list, v1); 
-	pushIndece(list, v2); 
-	pushIndece(list, v3); 
+	pushVertex(list, v1); 
+	pushVertex(list, v2); 
+	pushVertex(list, v3); 
 }
 
-function pushIndece(list, v) {
+function pushVertex(list, v) {
 	list.push( v[0], v[1], v[2] ); 
 }
 
