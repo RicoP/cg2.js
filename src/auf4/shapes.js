@@ -199,9 +199,79 @@ Sphere = function(gl, size) {
     // instantiate the shape as a member variable
     this.shape = new VertexBasedShape(gl, gl.TRIANGLES, vposition.length / 3);
 
-    var s = size || 1.0; 
+    var s = size || 1.0;
+
+	if(s !== 1.0) {
+		for(var i = 0; i != vposition.length; i++) {
+			vposition[i] = s * vposition[i]; 
+		}
+	} 
     
     this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
+}
+
+
+Torus = function(gl, torusRadius, radius, sides, rings) {
+	var vertices = getTorusVertices(torusRadius, radius, sides, rings);  
+
+	var vposition = new Float32Array( vertices );  
+
+    // instantiate the shape as a member variable
+    this.shape = new VertexBasedShape(gl, gl.TRIANGLES, vposition.length / 3);
+
+    this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
+}
+
+
+
+function getTorusVertices(torusRadius, radius, sides, rings) {
+	"use strict"; 
+
+	var i, j, 
+		theta, phi, theta1, 
+		cosTheta, sinTheta, 
+		cosTheta1, sinTheta1, 
+		ringDelta, sideDelta, 
+		cosPhi, sinPhi, dist,
+		v1, v2,  
+		list; 
+
+	list = []; 
+	sideDelta = 2.0 * Math.PI / sides; 
+	ringDelta = 2.0 * Math.PI / rings; 
+	theta = 0.0; 
+	cosTheta = 1.0; 
+	sinTheta = 0.0; 
+
+	//list = []; 
+	//glNewList
+	for(i = rings - 1; i != 0; i--) {
+		theta1 = theta + ringDelta; 
+		cosTheta1 = Math.cos(theta1); 
+		sinTheta1 = Math.sin(theta1); 
+		//glBegin(QUAD)
+		phi = 0; 
+		for(j = sides; j != 0; j--) {
+			phi = phi + sideDelta; 
+			cosPhi = Math.cos(phi); 
+			sinPhi = Math.sin(phi); 
+			dist = radius + (torusRadius * cosPhi); 
+			
+			//glNormal
+			v1 = [cosTheta1 * dist, -sinTheta1 * dist, torusRadius * sinPhi]; 
+
+			//glNormal
+			v2 = [cosTheta * dist, -sinTheta * dist, torusRadius * sinPhi]; 
+			pushQuadAsTriangles(list, v1, v2); 
+		}
+		//glEnd
+		theta = theta1; 
+		cosTheta = cosTheta1; 
+		sinTheta = sinTheta1; 
+	}
+	//glEndList
+
+	return list; 
 }
 
 function getSphereVertices() {
@@ -311,6 +381,21 @@ function makeFlat(vertices, indeces) {
     }
 
     return new Float32Array(list); 
+}
+
+function pushQuadAsTriangles(list, a, b) {
+//	a---c
+//	|  /|
+//	| / |
+//	|/  |
+//	d---b
+	//Angenommen a.z == b.z 
+	var c, d; 
+	c = [b[0], a[1], a[2]]; 
+	d = [a[0], b[1], b[2]]; 
+
+	pushTriangle(list, a, d, c); 
+	pushTriangle(list, c, d, b); 
 }
 
 function pushTriangle(list, v1, v2, v3) {
