@@ -194,7 +194,7 @@ Sphere = function(gl, size) {
 	var vertices = getSphereVertices(); 
 	var indices = getSphereIndices();
 
-	var vposition = makeFlat(vertices, indices); 
+	var vposition = makeFlatWithSubdivision(vertices, indices, 3); 
 
     // instantiate the shape as a member variable
     this.shape = new VertexBasedShape(gl, gl.TRIANGLES, vposition.length / 3);
@@ -228,21 +228,99 @@ function getSphereIndices() {
     return i; 
 }
 
-function makeFlat(vertices, indeces) {
+function makeFlatWithSubdivision(vertices, indeces, level) {
     var list = [];
+
     for(var i = 0; i != indeces.length; i++) {
         var indece = indeces[i]; 
- 
-        pushTriangle( list, vertices[indece[0]][0], vertices[indece[0]][1], vertices[indece[0]][2] );  
-        pushTriangle( list, vertices[indece[1]][0], vertices[indece[1]][1], vertices[indece[1]][2] );  
-        pushTriangle( list, vertices[indece[2]][0], vertices[indece[2]][1], vertices[indece[2]][2] );  
+        var v1, v2, v3;
+         
+        v1 = vertices[indece[0]];
+        v2 = vertices[indece[1]]; 
+        v3 = vertices[indece[2]];   
+
+		if(level === 0) {
+        	pushTriangle(list, v1, v2, v3);
+		} 
+		else {
+			subdivide(list, v1, v2, v3, level - 1); 
+		}
+    }
+
+    return new Float32Array(list); 
+}
+
+function subdivide(list, v1, v2, v3, level) {
+	var v12, v23, v31; 
+	v12 = [
+		v1[0] + v2[0], 
+		v1[1] + v2[1], 
+		v1[2] + v2[2] 
+	]; 
+	normalize(v12); 
+
+	v23 = [
+		v2[0] + v3[0], 
+		v2[1] + v3[1], 
+		v2[2] + v3[2] 
+	]; 
+	normalize(v23); 
+
+	v31 = [
+		v3[0] + v1[0], 
+		v3[1] + v1[1], 
+		v3[2] + v1[2] 
+	]; 
+	normalize(v31); 
+
+	if(level === 0) {
+		pushTriangle(list, v1, v12, v31); 
+		pushTriangle(list, v2, v23, v12); 
+		pushTriangle(list, v3, v31, v23); 
+		pushTriangle(list, v12, v23, v31); 
+	}
+	else {
+		subdivide(list, v1, v12, v31, level - 1); 
+		subdivide(list, v2, v23, v12, level - 1); 
+		subdivide(list, v3, v31, v23, level - 1); 
+		subdivide(list, v12, v23, v31, level - 1); 	
+	}
+
+}
+
+function normalize(v) {
+	var l = Math.sqrt( v[0]*v[0] + v[1]*v[1] + v[2]*v[2] );
+
+	v[0] = v[0] / l;  
+	v[1] = v[1] / l;  
+	v[2] = v[2] / l;  
+}
+
+function makeFlat(vertices, indeces) {
+    var list = [];
+
+    for(var i = 0; i != indeces.length; i++) {
+        var indece = indeces[i]; 
+        var v1, v2, v3;
+         
+        v1 = vertices[indece[0]];
+        v2 = vertices[indece[1]]; 
+        v3 = vertices[indece[2]];   
+
+        pushTriangle(list, v1, v2, v3); 
     }
 
     return new Float32Array(list); 
 }
 
 function pushTriangle(list, v1, v2, v3) {
-    list.push(v1, v2, v3); 
+	pushIndece(list, v1); 
+	pushIndece(list, v2); 
+	pushIndece(list, v3); 
+}
+
+function pushIndece(list, v) {
+	list.push( v[0], v[1], v[2] ); 
 }
 
 

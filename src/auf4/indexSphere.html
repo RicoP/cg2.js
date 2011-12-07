@@ -13,7 +13,7 @@
     <script type="text/javascript" src="explorer.js"></script>
     <script type="text/javascript" src="shapes.js"></script>
     <script type="text/javascript" src="mainSphere.js"></script>
-    
+   
     <!-- vertex shader source code -->
     <script id="vert_shader" type="x-shader/x-vertex">
         uniform mat4 modelViewMatrix;
@@ -23,27 +23,19 @@
         varying vec4 fragColor;
         void main() { 
             gl_Position = projectionMatrix *  modelViewMatrix * vec4(vertexPosition,1.0);
-            fragColor = vec4(vertexColor,1.0);
+            fragColor = vec4(vertexPosition,1.0) + vec4(0.5,0.5,0.5,0.0);
         }
     </script>
 
     <!-- fragment shader source code -->
     <script id="frag_shader" type="x-shader/x-fragment">
-        precision mediump float;
-
-		const vec4 c_color1 = vec4(1.0,0.0,0.0,1.0);
-        const vec4 c_color2 = vec4(0.0,1.0,0.0,1.0);
-
+        precision highp float;
+        varying vec4 fragColor; 
         void main() { 
-			if (mod(gl_FragCoord.x, 50.0) >= 25.0) {
-				gl_FragColor = c_color1; 
-			}
-			else {
-				gl_FragColor = c_color2; 
-			}
+            gl_FragColor = fragColor;
         }    
     </script>
-    
+       
 </head>
 
 <body style="bgcolor:white; font-family:helvetica;">
