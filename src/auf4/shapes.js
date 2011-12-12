@@ -212,9 +212,28 @@ Sphere = function(gl, size) {
 
 
 Torus = function(gl, torusRadius, radius, sides, rings) {
-	var vertices = getTorusVertices(torusRadius, radius, sides, rings);  
+	var vertices = getTorusVertices(8, 25);  
 
 	var vposition = new Float32Array( vertices );  
+
+    // instantiate the shape as a member variable
+    this.shape = new VertexBasedShape(gl, gl.QUAD_STRIP, vposition.length / 2);
+
+    this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 2, vposition);
+}
+
+CSGTest = function(gl) {
+	"use strict"; 
+
+	var a = CSG.cube(); 
+	var b = CSG.sphere({ radius : 1.35 }); 
+	var form = a.subtract(b);
+
+	var list = []; 
+
+	addPolygonsToList(list, form.polygons);  
+
+	var vposition = new Float32Array( list );  
 
     // instantiate the shape as a member variable
     this.shape = new VertexBasedShape(gl, gl.TRIANGLES, vposition.length / 3);
@@ -222,56 +241,60 @@ Torus = function(gl, torusRadius, radius, sides, rings) {
     this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
 }
 
+function addPolygonsToList(list, p) {
+	for(var i = 0; i != p.length; i++) {
+		var vertices = p[i].vertices; 
+		addVerticesToList(list, vertices); 
+	}
+}
 
+function addVerticesToList(list, vertices, endpoint) {
+	if(!endpoint) {
+		return addVerticesToList(list, vertices, vertices.length - 1); 
+	}
 
-function getTorusVertices(torusRadius, radius, sides, rings) {
+	//CSG Polygon ist Konvex und Koplanar. d. h. man kann die 
+	//Eckpunkte ganz einfach paarweise zuordnen. 
+	pushVerticePosition(list, vertices[0].pos); 
+	pushVerticePosition(list, vertices[ endpoint - 1 ].pos); 
+	pushVerticePosition(list, vertices[ endpoint ].pos); 
+
+	if(endpoint > 2) { 
+		addVerticesToList(list, vertices, endpoint - 1); 
+	} 
+} 
+
+function pushVerticePosition(list, v) {
+	list.push(v.x, v.y, v.z); 
+}
+
+function getTorusVertices( numc, numt ) {
 	"use strict"; 
 
-	var i, j, 
-		theta, phi, theta1, 
-		cosTheta, sinTheta, 
-		cosTheta1, sinTheta1, 
-		ringDelta, sideDelta, 
-		cosPhi, sinPhi, dist,
-		v1, v2,  
-		list; 
+	var i,j,k,
+		s, t, x, y, z, twopi, 
+		list;
 
-	list = []; 
-	sideDelta = 2.0 * Math.PI / sides; 
-	ringDelta = 2.0 * Math.PI / rings; 
-	theta = 0.0; 
-	cosTheta = 1.0; 
-	sinTheta = 0.0; 
+	list = [];  
 
-	//list = []; 
-	//glNewList
-	for(i = rings - 1; i != 0; i--) {
-		theta1 = theta + ringDelta; 
-		cosTheta1 = Math.cos(theta1); 
-		sinTheta1 = Math.sin(theta1); 
-		//glBegin(QUAD)
-		phi = 0; 
-		for(j = sides; j != 0; j--) {
-			phi = phi + sideDelta; 
-			cosPhi = Math.cos(phi); 
-			sinPhi = Math.sin(phi); 
-			dist = radius + (torusRadius * cosPhi); 
-			
-			//glNormal
-			v1 = [cosTheta1 * dist, -sinTheta1 * dist, torusRadius * sinPhi]; 
+	twopi = 2 * Math.PI; 
+	for( i = 0; i < numc; i++ ) {
+		//glBegin(QUAD_STRIP); 
+		for( j = 0; j <= numt; j++ ) {
+			for( k = 1; k >= 0; k-- ) {
+				s = (i + k) % numc + 0.5; 
+				t = j % numt; 
 
-			//glNormal
-			v2 = [cosTheta * dist, -sinTheta * dist, torusRadius * sinPhi]; 
-			pushQuadAsTriangles(list, v1, v2); 
+				x = (1 + 0.1 * Math.cos(s * twopi / numc)) * Math.cos(t * twopi / numt); 
+				y = (1 + 0.1 * Math.cos(s * twopi / numc)) * Math.sin(t * twopi / numt); 
+				z = 0.1 * Math.sin(s * twopi / numc); 
+				list.push(x, y, z); 
+			} 
 		}
-		//glEnd
-		theta = theta1; 
-		cosTheta = cosTheta1; 
-		sinTheta = sinTheta1; 
+		//glEnd(); 
 	}
-	//glEndList
 
-	return list; 
+	return new Float32Array( list ); 
 }
 
 function getSphereVertices() {
