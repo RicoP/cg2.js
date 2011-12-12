@@ -222,6 +222,24 @@ Torus = function(gl, torusRadius, radius, sides, rings) {
     this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 2, vposition);
 }
 
+UglyTorus = function(gl, torusRadius, radius, sides, rings) {
+	var a = CSG.sphere({ radius: 1.35, stacks: 32 , slices : 32});
+	var b = CSG.cube( {center : [-2.2,0,0] , radius : 2}); 
+	var c = CSG.cube( {center : [2.2,0,0], radius : 2 }); 
+	var d = CSG.cylinder({start: [-1, 0, 0], end: [1, 0, 0],}); 
+	var form = a.subtract(b).subtract(c).subtract(d);	
+	var list = []; 
+
+	addPolygonsToList(list, form.polygons);  
+
+	var vposition = new Float32Array( list );  
+
+    // instantiate the shape as a member variable
+    this.shape = new VertexBasedShape(gl, gl.TRIANGLES, vposition.length / 3);
+
+    this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
+}
+
 CSGTest = function(gl) {
 	"use strict"; 
 

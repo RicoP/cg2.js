@@ -25,7 +25,7 @@ window.onload = function () {
     theScene = new SimpleScene(prog, [0.0 ,0.0, 0.0, 1.0]);
     
     // add an object to the scene
-    theScene.addShape(new Torus(gl, 0.6, 1.8, 16, 32));
+    theScene.addShape(new UglyTorus(gl));
     
     // set the camera's viewpoint and viewing direction
     theScene.camera.lookAt([0,2,4], [0,0,0], [0,1,0]);
