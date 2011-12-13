@@ -240,16 +240,12 @@ UglyTorus = function(gl, torusRadius, radius, sides, rings) {
     this.shape.addVertexAttribute(gl, "vertexPosition", gl.FLOAT, 3, vposition);
 }
 
-CSGTest = function(gl) {
+CSGConstructor = function(gl, csg) {
 	"use strict"; 
-
-	var a = CSG.cube(); 
-	var b = CSG.sphere({ radius : 1.35 }); 
-	var form = a.subtract(b);
 
 	var list = []; 
 
-	addPolygonsToList(list, form.polygons);  
+	addPolygonsToList(list, csg.polygons);  
 
 	var vposition = new Float32Array( list );  
 

@@ -20,12 +20,15 @@ window.onload = function () {
     var vs = getShaderSource("vert_shader");
     var fs = getShaderSource("frag_shader");
     var prog = new Program(gl, vs, fs);
+	
+	// Ugh! 
+	window.gl = gl; 
     
     // theScene is a global variable; it is accessed by the event handlers
     theScene = new SimpleScene(prog, [0.0 ,0.0, 0.0, 1.0]);
     
     // add an object to the scene
-    theScene.addShape(new CSGTest(gl));
+    //theScene.addShape(new CSGTest(gl));
     
     // set the camera's viewpoint and viewing direction
     theScene.camera.lookAt([0,2,4], [0,0,0], [0,1,0]);
