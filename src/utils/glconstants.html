@@ -1,0 +1,29 @@
+<html> 
+<head> 
+<title> GL_CONSTANTS </title> 
+</head>
+<body> 
+<script type="text/javascript"> 
+var gl = document.createElement("canvas").getContext("experimental-webgl"); 
+var list = []; 
+
+for(var k in gl) {
+	list.push(k); 
+}
+
+var constants = list.filter(function(k) {
+	return k.toUpperCase() === k; // IS_CONSTANT_IS_UPPERCASE   
+}).map(function(k) {
+	return "GL_" + k + " = " + gl[k]; // GL_CONSTANT = value  
+}).sort(); 
+
+var html = "var\n" + constants.join(",\n"); 
+
+var pre = document.createElement("pre"); 
+pre.innerHTML = html; 
+
+document.body.appendChild(pre); 
+
+</script> 
+</body>
+</html> 
