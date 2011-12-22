@@ -32,6 +32,9 @@ VertexBasedShape = function(gl, primitiveType, numVertices) {
 	// remember how many vertices this shape has
 	this.numVertices = numVertices;
 
+	//FOOBAR 
+	//this.transformation = mat4.identity(); 
+
 	// check if numVertices is a integer 
 	if(numVertices != (~~numVertices)) {
 		console.log("numVertices is not a full number."); 
@@ -50,12 +53,19 @@ VertexBasedShape = function(gl, primitiveType, numVertices) {
 								+ ") for attribute " + attrType);
 		}
 	}
+
+	/*
+	this.setUniform = function(gl, program) {
+		var f = gl.program.getuniformAttribute("myMatrix", gl.FLOAT, ...); 
+		f.setValue(thistransformation); 
+		//Siehe Buffer.js 
+	}; 
+	*/
 	
 	/* 
 	   Method: draw using a vertex buffer object
 	*/
 	this.draw = function(program) {
-	
 		// go through all types of vertex attributes 
 		// and enable them before drawing
 		for(attribute in this.vertexBuffers) {
