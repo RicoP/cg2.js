@@ -23,15 +23,6 @@ window.onload = function() {
 	// theScene is a global variable; it is accessed by the event handlers
 	theScene = new SimpleScene(prog, [0.0, 0.0, 0.0, 1.0]);
 
-	var c1 = [0.9, 0.1, 0.1];
-	var c2 = [0.1, 0.1, 0.9];
-
-	//var torus = new MyTorus(gl, 1.5, 0.7, 36, 36, c1, c2);
-	var torus = new MyTorus(gl, 1.5, 0.8, 30, 30, c1, c2, 0);
-
-	// add an object to the scene
-	theScene.addShape(torus);
-
 	// set the camera's viewpoint and viewing direction
 	theScene.camera.lookAt([0, 2, 4], [0, 0, 0], [0, 1, 0]);
 
@@ -40,6 +31,28 @@ window.onload = function() {
 
 	// the SceneExporer handles events to manipulate the scene
 	theExplorer = new SceneExplorer(canvas, theScene);
+
+	// add all three objects to the scene
+	var c1 = [0.9, 0.1, 0.1];
+	var c2 = [0.1, 0.1, 0.9];
+	
+	var c3 = [0.9, 0.9, 0.0];
+	var c4 = [0.9, 0.0, 0.0];
+
+	// the shapes
+	var sphere = new Sphere(gl, 1.5);
+	var torus = new MyTorus(gl, 0.6, 0.3, 30, 30, c1, c2, 0);
+	var cube = new Cube(gl);
+	var torus2 = new MyTorus(gl, 0.9, 0.5, 100, 100, c3, c4, 1);
+	mat4.translate(torus2.shape.modelTranslation, [1, 0, 0]);
+	mat4.translate(torus.shape.modelTranslation, [2, -3, 0]);
+	mat4.translate(cube.shape.modelTranslation, [-1, 0, -3]);
+	// theScene.addShape(sphere);
+	theScene.addShape(torus);
+	theScene.addShape(cube);
+	theScene.addShape(torus2);
+	theScene.draw();
+
 };
 /*
  Event handler called whenever values in the

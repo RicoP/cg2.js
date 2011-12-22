@@ -29,7 +29,6 @@
 	     else 
                fragColor = vec4(vertexPosition,1.0) + vec4(0.5,0.5,0.5,0.0);
 		//	fragColor = vec4(1.0,1.0,1.0,1.0); 
-		fragColor.w = 1.0; 
         }
     </script>
 

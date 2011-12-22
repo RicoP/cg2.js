@@ -27,7 +27,7 @@ window.onload = function() {
 	var c2 = [0.1, 0.1, 0.9];
 
 	//var torus = new MyTorus(gl, 1.5, 0.7, 36, 36, c1, c2);
-	var torus = new MyTorus(gl, 1.5, 0.8, 30, 30, c1, c2, 0);
+	var torus = new MyTorus(gl, 0.6, 0.3, 30, 30, c1, c2, 0);
 
 	// add an object to the scene
 	theScene.addShape(torus);
